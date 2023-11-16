@@ -12,22 +12,20 @@ ToplingDB SaaS 系列数据库(如 MyTopling)由以下三部分组成:
 
 弹性计算服务收费相关详见[后文](#按量付费说明)
 
+## MyTopling 数据库的优势
+**ECS 8c32g 本地 SSD(ecs.i3g.2xlarge)**
+![](img/mytopling-bench.png)
+
 ## MyTopling 数据库实例创建流程
 
 ### 1.创建数据库依赖项
 #### 1.1 开通 [Topling SaaS 弹性计算服务(点击跳转)](https://market.aliyun.com/products/56024006/cmgj00064106.html)
-<div align="center" >
 <img src="img/api-image.png" height="200"/>
-</div>
-<br />
 本服务是后续资源创建的基础，如果未开通，则无法继续。（本服务为 Topling 的所有数据库提供服务，MyTopling 是其中之一）
 
 #### 1.2 创建 [Topling 数据库部署环境(点击跳转)](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-cb1b7a70ed544bbcaa75)
 
-<div align="center" >
 <img src="img/topling-db-env.png" height="300"/>
-</div>
-<br />
 
 为数据库实例准备 VPC，每个地域必须创建一次且仅能创建一次。（本运行环境为 Topling 的所有数据库提供支撑，MyTopling 是其中之一）
 
@@ -38,18 +36,14 @@ ToplingDB SaaS 系列数据库(如 MyTopling)由以下三部分组成:
 ### 2. 创建 [MyTopling 数据库实例(点击跳转)](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-7e82cdf7c86f4d2f906e)
 
 MyTopling 实例为用户实际使用的数据库。如下图，用户按自身需求填写选项内容，填写完成后即可创建数据库。
-<br />
 
 ![](./img/mytopling-img.png)
-
-<br />
 
 用户可以使用[阿里云DMS](https://dms.aliyun.com/),如图 管理创建的数据库，使用用户名 `mytopling_dms`连接数据库，为 `MyToplingDmsPw` 。
 ![](./img/dms.png)
 
 
 `注意，此用户 (mytopling_dms) 仅供 DMS 服务连接，在不修改数据库白名单的前提下，除阿里云官方服务外，其他客户端无法使用此用户名连接数据库。`
-
 
 
 ### 3. 管理与连接数据库
@@ -81,102 +75,16 @@ MyTopling 默认创建的安全组没有放行 3306 端口，但同安全组内�
 
 ## 按量付费说明
 
-
-数据压缩消耗的计算量不容易精确计算，但它跟数据压缩前与压缩后的尺寸高度相关。我们用 $`RawSize`$ 表示数据压缩前的尺寸，用 $`ZipSize`$ 表示数据压缩后的尺寸，用两者的几何平均值 $`NormSize = \sqrt {RawSize \times ZipSize}`$ 来衡量计算量，然后将 $`NormSize`$ 转化为 $`Unit`$ 计费单元来计费：
-
-$`UnitNum = {NormSize \over 1048576}`$，其中 $`1048576 = 2^{20}`$ 为 1 MiB，即每个 $`Unit`$ 对应 1 MiB 的 $`NormSize`$
-
-计算 $`NormSize`$ 时，按照每小时（出账周期）内 $`RawSize`$ 和 $`ZipSize`$ 的累加量计算，每个 $`Unit`$ 收费 ￥0.0005（合 ￥0.5/千Unit，即 $`NormSize`$ 价格为 ￥0.5/G）。
-
-Topling SaaS 服务价格量大从优，100G 以内为原价，之后数据量($`NormSize`$)每增加 10 倍，价格降低 50%，10P 以上不再降价，可以购买预付费流量包抵扣，预付费流量包是按量付费的 8 折，详表：
-<table border=1>
-<tbody align=right>
-<tr align=middle>
-<td>$Norm$<br>$Size$</td>
-<td>$Unit$ 千数<br>
-每千 $Unit$<br>
-对应 1G</td>
-<td>折扣<br>
-50 表示<br>
-5 折</td>
-<td>单价　　<br>
-单位 • 分<br>
-（￥0.01）</td>
-<td>按量付费<br>
-累计金额<br>
-（￥1.00）</td>
-<td>流量包<br>
-预付费<br>
-等效折扣</td>
-<td>流量包<br>
-折后价<br>
-（8折）</td>
-</tr>
-<tr>
-<td>100G</td>
-<td>100</td>
-<td>100.00</td>
-<td>50.00</td>
-<td>50</td>
-<td>80.00</td>
-<td>40</td>
-</tr>
-<tr>
-<td>1T</td>
-<td>1,000</td>
-<td>50.00</td>
-<td>25.00</td>
-<td>275</td>
-<td>40.00</td>
-<td>200</td>
-</tr>
-<tr>
-<td>10T</td>
-<td>10,000</td>
-<td>25.00</td>
-<td>12.50</td>
-<td>1,400</td>
-<td>20.00</td>
-<td>1,000</td>
-</tr>
-<tr>
-<td>100T</td>
-<td>100,000</td>
-<td>12.50</td>
-<td>6.25</td>
-<td>7,025</td>
-<td>10.00</td>
-<td>5,000</td>
-</tr>
-<tr>
-<td>1P</td>
-<td>1,000,000</td>
-<td>6.25</td>
-<td title="3.125">3.13</td>
-<td>35,150</td>
-<td>5.00</td>
-<td>25,000</td>
-</tr>
-<tr>
-<td>10P</td>
-<td>10,000,000</td>
-<td title="3.125">3.13</td>
-<td title="1.5625">1.56</td>
-<td>175,775</td>
-<td>2.50</td>
-<td>125,000</td>
-</tr>
-</tbody>
-</table>
+![](img/fee-formula-and-table.png)
 
 * 每超出前一个价格区间，就开始按下一个价格区间计价，例如，100G 以内为 ￥0.5/G，100G \~ 1T 区间的 900G 价格为 ￥0.25/G。
 * 用预付费流量包抵扣时，从一开始就按流量包的价格计算，例如购买了 100T 的流量包，从一开始就按 ￥0.05/G 的价格计算。
 
-`注:阿里云后付费目前尚未推出流量包，可联系客服享受相同折扣`
+`注: 阿里云后付费目前尚未推出流量包功能，可联系客服享受相同折扣`
 
-以 ToplingDB 的写放大估计，$`NormSize`$ 一般为写入数据量的 5~10 倍，不同的数据 Pattern，写放大会有所不同，以实际为准。
-举例来说: 同时运行 sysbench 和 tpcc，对数据库发出约 6 MiB/s 持续的随机写，每小时产生的 $`NormSize`$ 约为 170 G，以原价计为 ￥85（貌似挺贵）。
-保持 6 MiB/s 的速度持续运行一年，产生 1489T 的 $`NormSize`$，使用按量付费价格为 ￥42,790，使用 10P 的预付费流量包，价格为￥18,613。
+以 ToplingDB 的写放大估计，_NormSize_ 一般为写入数据量的 5~10 倍，不同的数据 Pattern，写放大会有所不同，以实际为准。
+举例来说: 同时运行 sysbench 和 tpcc，对数据库发出约 6 MiB/s 持续的随机写，每小时产生的 _NormSize_ 约为 170 G，以原价计为 ￥85（貌似挺贵）。
+保持 6 MiB/s 的速度持续运行一年，产生 1489T 的 _NormSize_，使用按量付费价格为 ￥42,790，使用 10P 的预付费流量包，价格为￥18,613。
 对于普通应用，写压力远低于此，实际支出是非常低的。同时 MyTopling 带来的 3 倍以上 CPU、内存、SSD 节约，更加实实在在地降低了成本。
 
 实际上，一方面现实应用很少有这么高的写压力，另一方面 MyTopling 能承载的极限压力远高于此！此外，MyTopling 也有完全的私有化部署版本，SaaS 也运行在用户的 ECS 上，按传统方式收费，进一步为高负载应用降低成本。
