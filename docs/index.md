@@ -10,7 +10,7 @@ ToplingDB SaaS 系列数据库(如 MyTopling)由以下三部分组成:
 * [MyTopling 数据库](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-7e82cdf7c86f4d2f906e)
 用户实际使用的数据库。除了数据库本身使用的ECS资源会由阿里云代扣之外，我方会收取数据库调用 `Topling SaaS 弹性计算服务`的费用（数据库自动调用，无需用户干涉），按照服务消耗的计算量收费。
 
-弹性计算服务收费相关详见[后文](#按量付费说明)
+弹性计算服务收费相关详见后文**按量付费说明**
 
 ## MyTopling 数据库的优势
 **ECS 8c32g 本地 SSD(ecs.i3g.2xlarge)**
@@ -29,9 +29,12 @@ ToplingDB SaaS 系列数据库(如 MyTopling)由以下三部分组成:
 
 为数据库实例准备 VPC，每个地域必须创建一次且仅能创建一次。（本运行环境为 Topling 的所有数据库提供支撑，MyTopling 是其中之一）
 
-如果未开通 [Topling SaaS 弹性计算服务](https://market.aliyun.com/products/56024006/cmgj00064106.html) 则 [Topling 数据库运行环境](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-cb1b7a70ed544bbcaa75)
+**注意**：如果您未开通 [Topling SaaS 弹性计算服务](https://market.aliyun.com/products/56024006/cmgj00064106.html) 则 [Topling 数据库运行环境](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-cb1b7a70ed544bbcaa75)
 会创建失败。请删除后重建
 
+**注意**：如果您尚未开通 CDT，会出现以下提示信息，按照提示开通 CDT，然后继续下一步。
+
+![](./img/requires-ctd.png)
 
 ### 2. 创建 [MyTopling 数据库实例(点击跳转)](https://computenest.console.aliyun.com/service/instance/create/cn-hangzhou?type=user&ServiceId=service-7e82cdf7c86f4d2f906e)
 
@@ -39,11 +42,14 @@ MyTopling 实例为用户实际使用的数据库。如下图，用户按自身�
 
 ![](./img/mytopling-img.png)
 
-用户可以使用[阿里云DMS](https://dms.aliyun.com/),如图 管理创建的数据库，使用用户名 `mytopling_dms`连接数据库，为 `MyToplingDmsPw` 。
+
+> **注意**：`临时测试(不可用于生产系统)` 使用抢占式 ECS 实例，价格低廉，但有可能会被云厂商回收，导致数据消失，因此仅供临时测试使用，绝不可用于生产系统。此种实例产生的按量付费的 SaaS 费用不变，与其它类型的相同。
+
+用户可以使用[阿里云DMS](https://dms.aliyun.com/) 管理创建的数据库（如图），DMS 连接数据库的初始用户名为 `mytopling_dms`，密码为`MyToplingDmsPw`。
 ![](./img/dms.png)
 
 
-`注意，此用户 (mytopling_dms) 仅供 DMS 服务连接，在不修改数据库白名单的前提下，除阿里云官方服务外，其他客户端无法使用此用户名连接数据库。`
+> **注意**：DMS 用户 (mytopling_dms) 仅供 DMS 服务连接，在不修改数据库白名单的前提下，除阿里云官方服务外，其他客户端无法使用此用户名连接数据库。
 
 
 ### 3. 管理与连接数据库
